@@ -6,7 +6,7 @@ A power spectrum estimator with interlacing and fourth-order interpolation
 v1 Oct 2017
 *******************************************************************************
 
-Latest version on https://github.com/
+Latest version on https://github.com/sefusatti/PowerI4
 DOI https://
 
 *******************************************************************************
