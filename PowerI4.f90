@@ -2,13 +2,7 @@
 
 !{ Developers = Emiliano Sefusatti, Martin Crocce !}
 !{ Based on previous codes by R. Scoccimarro and H. Couchman - !}
-!{ Version    = beta       !}
-!{ Time-stamp = Oct - 2017 !}
-!{ 2017-10-04
-!{- FFT in place for interlacing
-!{- Simplified indexing in assign subroutines
-!{- Normalization by 1/Nptot after assignment
-!{- Normalization by 1/kF3 in fcomb
+!{ Version    = v1.0       !}
 
 !{ Subroutines in this file:
 !{ input_parameters_file
@@ -139,8 +133,8 @@
 
 
 
-! *************************************************************************************
-! *** Input parameters ****************************************************************
+! ******************************************************************************
+! *** Input parameters *********************************************************
 
 
     subroutine input_parameters_file
