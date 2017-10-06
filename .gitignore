@@ -1,4 +1,6 @@
 *.o
 *.mod
 *.e
-
+.DS_store
+old/*
+docs/*
