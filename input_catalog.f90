@@ -99,7 +99,9 @@
 
       Rbox = Rbox / kpc2mpc
       if(Rbox.ne.Rx) then
-      write(*,'(A,4F13.2)') '> ERROR = Make sure your input box-size is correct', Rbox,Rx,Ry,Rz
+      write(*,'(A)') '> ERROR: Make sure your input box-size is correct', Rbox,Rx,Ry,Rz
+      write(*,'(A,3F13.2)') '> Box sizes from parameters file:', Rx,Ry,Rz
+      write(*,'(A,1F13.2)') '> Box size from catalog file:', Rbox
       stop
       endif 
 
