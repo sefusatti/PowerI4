@@ -45,6 +45,15 @@
       call input_parameters_file
       call print_initial_log
 
+      if (infiletype.eq.-1) then
+
+         call input_fourier_space_density
+         call measure_pk
+         stop
+         
+      endif
+
+      
 !{  Allocating grids !}
 
       write(*,'(A)') ' allocating grid'
@@ -147,7 +156,7 @@
       read(*,*) ! input file name
       read(*,*) infile
       read(*,*) ! type of input file
-      read(*,*) infiletype
+      read(*,*) infiletype, objseltype, objselmin, objselmax
       read(*,*) ! output file
       read(*,*) outfile
       read(*,*) ! linear grid sizes
@@ -197,22 +206,26 @@
       write(*,'(A)')        ' *** PowerI4 *** '
       write(*,*)
       write(*,'(A,A)')      ' input file = ', trim(infile)
-      write(*,'(A,3F10.3)') ' box sizes [Mpc/h] = ',    Rx,Ry,Rz
-      write(*,'(A,3I5)')    ' FFT grid sizes = ',       Nx,Ny,Nz
-      write(*,'(A,I5)')     ' interpolation order = ',  nintp
-      if (Nx.ne.nint(Nz*Rx/Rz) .or. Ny.ne.nint(Nz*Ry/Rz)) then
-         write(*,'(A)')     ' WARNING: not equal resolution in all directions'
+      if (infiletype.ge.0) then
+         write(*,'(A,3F10.3)') ' box sizes [Mpc/h] = ',    Rx,Ry,Rz
+         write(*,'(A,3I5)')    ' FFT grid sizes = ',       Nx,Ny,Nz
+         write(*,'(A,I5)')     ' interpolation order = ',  nintp
+         if (Nx.ne.nint(Nz*Rx/Rz) .or. Ny.ne.nint(Nz*Ry/Rz)) then
+            write(*,'(A)')     ' WARNING: not equal resolution in all directions'
+         endif
+         if (nintp.eq.0) then
+            write(*,'(A)')     ' WARNING: direct summation!'
+         endif
+         if (.not. interlacing) then
+            write(*,'(A)')     ' WARNING: no interlacing!'
+         endif
+      else
+         write(*,'(A)') ' Fourier-space density in input'
       endif
-      if (nintp.eq.0) then
-         write(*,'(A)')     ' WARNING: direct summation!'
-      endif
-      if (.not. interlacing) then
-         write(*,'(A)')     ' WARNING: no interlacing!'
-      endif
-      if(iRSD.ne.0) then
-         write(*,'(A,I2)')  ' multiples evaluated along axis ', iRSD
-      endif
-      write(*,'(A,A)')      ' output file = ', trim(outfile)
+         if(iRSD.ne.0) then
+            write(*,'(A,I2)')  ' multiples evaluated along axis ', iRSD
+         endif
+         write(*,'(A,A)')      ' output file = ', trim(outfile)
 
     end subroutine print_initial_log
 
@@ -345,9 +358,29 @@
 
 
 ! ***********************************************************************************
+! *** Input densities  **************************************************************
+
+    subroutine input_fourier_space_density
+
+      use parbox, only : infile,Nptot,kFx,kFy,kFz,kNx
+      use grid, only   : Nx,Ny,Nz,dcl
+      implicit none
+      integer :: ix,iy,iz
+      real(kind=8) :: rNptot
+
+      open(unit=4,file=infile,status='old',form='unformatted')
+      read(4) Nx,Ny,Nz,rNptot,kFx,kFy,kFz,kNx
+      allocate(dcl(Nx/2+1,Ny,Nz))
+      read(4) (((dcl(ix,iy,iz),ix=1,Nx/2+1),iy=1,Ny),iz=1,Nz)
+      close(4)
+      Nptot=int(rNptot)
+      
+    end subroutine input_fourier_space_density
+
+
+    
+! ***********************************************************************************
 ! *** Output densities  *************************************************************
-
-
 
     subroutine output_fourier_space_density
 

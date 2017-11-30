@@ -16,7 +16,8 @@
       integer :: infiletype
       
       if(infiletype.eq.0) call input_catalog_xyz
-      if(infiletype.eq.1) call input_catalog_gadget
+      if(infiletype.eq.1) call input_catalog_xyz_vel
+      if(infiletype.eq.2) call input_catalog_gadget
         
     end subroutine input_chosen_catalog
 
@@ -55,6 +56,40 @@
      
    end subroutine input_catalog_xyz
 
+
+   
+! *****************************************************************************!
+! Same plus velocities and mass                                                !
+
+   subroutine input_catalog_xyz_vel
+
+     use parbox, only: Rx,Ry,Rz,infile,Nptot
+     
+     implicit none
+     real (kind=8) :: r(3),L(3)
+     real (kind=4) :: rr(3),v(3),m
+
+     L=(/Rx,Ry,Rz/)
+
+     open(11,file=infile,status='old',form='unformatted')
+     Nptot=0
+     
+     do while(.true.)
+        read(11,end=10) rr(1),rr(2),rr(3),v(1),v(2),v(3),m  ! unformatted
+        !if (Nptot.lt.10) write(*,*) rr(1),rr(2),rr(3)
+        r=rr
+        
+        call assign(r,L)
+
+        Nptot=Nptot+1  ! counting particles
+        
+     enddo
+
+10   continue
+     
+   end subroutine input_catalog_xyz_vel
+
+   
 !*******************************************************************!
 !**** Reads Gadget unformatted comoving output files   *************!
 
@@ -152,4 +187,11 @@
       return
       end subroutine input_catalog_gadget 
 
+      
     end module
+
+
+! *****************************************************************************!
+     
+
+
