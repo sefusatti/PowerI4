@@ -362,7 +362,7 @@
 
     subroutine input_fourier_space_density
 
-      use parbox, only : infile,Nptot,kFx,kFy,kFz,kNx
+      use parbox, only : infile,Nptot,kFx,kFy,kFz,kNx,kNy,kNz,kF3
       use grid, only   : Nx,Ny,Nz,dcl
       implicit none
       integer :: ix,iy,iz
@@ -374,6 +374,9 @@
       read(4) (((dcl(ix,iy,iz),ix=1,Nx/2+1),iy=1,Ny),iz=1,Nz)
       close(4)
       Nptot=int(rNptot)
+      kNy=kNx
+      kNz=kNx
+      kF3=kFx*kFy*kFz
       
     end subroutine input_fourier_space_density
 
