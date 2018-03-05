@@ -107,12 +107,12 @@
 
           if (interlacing) then
              ! FFTW complex to complex in place
-             call dfftw_plan_dft_3d(planf,Nx,Ny,Nz,dcl,dcl,FFTW_ESTIMATE)
-             call dfftw_execute(planf)
+             call dfftw_plan_dft_3d(planf,Nx,Ny,Nz,dcl,dcl,FFTW_BACKWARD,FFTW_ESTIMATE)
+             call dfftw_execute_dft(planf,dcl,dcl)
           else
              ! FFTW real to complex out of place
              call dfftw_plan_dft_r2c_3d(planf,Nx,Ny,Nz,dtl,dcl,FFTW_ESTIMATE)
-             call dfftw_execute(planf)
+             call dfftw_execute_dft_r2c(planf,dtl,dcl)
           endif
 
           write(*,'(A)') ' doing fcomb'
